@@ -1,7 +1,28 @@
-import { fetchCustomers, fetchInvoiceById } from '@/app/lib/data'
+import { fetchCustomerById, fetchCustomers, fetchInvoiceById } from '@/app/lib/data'
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs'
 import Form from '@/app/ui/invoices/edit-form'
 import { notFound } from 'next/navigation'
+
+import type { Metadata, ResolvedMetadata } from 'next'
+
+export async function generateMetadata(
+  { params }: { params: { id: string } },
+  parent: ResolvedMetadata
+): Promise<Metadata> {
+  const id = params.id
+
+  const [customer] = await Promise.all([fetchCustomerById(id)])
+
+  return {
+    title: `Edit ${customer.name}`,
+  }
+}
+
+// export async function generateMetadata({ params }) {
+//   return {
+//     title: '...',
+//   }
+// }
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id

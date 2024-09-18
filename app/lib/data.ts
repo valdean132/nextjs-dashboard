@@ -158,8 +158,27 @@ export async function fetchInvoiceById(id: string) {
       amount: invoice.amount / 100,
     }))
 
-    console.log(invoice)
     return invoice[0]
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch invoice.')
+  }
+}
+
+export async function fetchCustomerById(id: string) {
+  try {
+    const data = await sql<InvoiceForm> /*sql*/`
+      SELECT
+        customers.name
+      FROM invoices
+      JOIN customers ON invoices.customer_id = customers.id
+      WHERE invoices.id = ${id};
+    `
+
+    const customer = data.rows
+
+    console.log(customer)
+    return customer[0]
   } catch (error) {
     console.error('Database Error:', error)
     throw new Error('Failed to fetch invoice.')
